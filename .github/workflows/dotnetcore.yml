@@ -3,7 +3,7 @@ env:
   VERSION_NUMBER: NotSet
 on: [push]
 jobs:
-  job_1:
+  build:
     runs-on: windows-latest
     steps:  
     - uses: actions/checkout@v2
@@ -11,15 +11,16 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
-#        dotnet-version: 5.0.100-preview.7
+        dotnet-version: 5.0.x
 
-    - name: Setup Nuget.exe (warrenbuckley)
-      uses: warrenbuckley/Setup-Nuget@v1
+    - name: Install nuget
+      uses: nuget/setup-nuget@v1
+      with:
+	nuget-version: 5.x	
       
-    # Add Deps from HMA Nuget Server
+    # Add Deps from our Nuget Server
     - name: Register GPR
-      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/hmasw/index.json" -UserName ${{ secrets.HMA_NUGET_USERNAME }} -Password ${{ secrets.HMA_NUGET_PASSWORD }}
+      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/outkit/index.json" -UserName ${{ secrets.OUTKIT_NUGET_USERNAME }} -Password ${{ secrets.OUTKIT_NUGET_PASSWORD }}
   
     # Build
     - name: Run build
