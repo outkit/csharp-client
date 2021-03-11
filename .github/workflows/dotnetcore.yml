@@ -1,0 +1,36 @@
+name: csharp-client from Outkit
+env:
+  VERSION_NUMBER: NotSet
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:  
+    - uses: actions/checkout@v2
+  
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Install nuget
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: 5.x	
+      
+    # Add Deps from our Nuget Server
+    - name: Register GPR
+      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/outkit/index.json" -UserName ${{ secrets.OUTKIT_NUGET_USERNAME }} -Password ${{ secrets.OUTKIT_NUGET_PASSWORD }}
+  
+    # Build
+    - name: Run build
+      run: dotnet build ./Outkit/Outkit.csproj --configuration Release
+
+    # Test
+    #- name: Run Tests
+    #  run: dotnet test ./Hma.Utils.Tests/calc2tests/hma.utils.calc2.tests.csproj --configuration Release
+    #- name: Run Tests
+    #  run: dotnet test ./Hma.Utils.Tests/Hma.Utils.Test/Hma.Utils.Test.csproj --configuration Release
+
+    - name: push package
+      run: nuget push *\bin\Release\*.nupkg -Source "GPR"
