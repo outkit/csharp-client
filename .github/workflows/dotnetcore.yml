@@ -22,8 +22,8 @@ jobs:
         nuget-version: 5.x	
       
     # Add Deps from our Nuget Server
-    - name: Register GPR
-      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/outkit/index.json" -UserName ${{ secrets.OUTKIT_NUGET_USERNAME }} -Password ${{ secrets.OUTKIT_NUGET_PASSWORD }}
+    # - name: Register GPR
+    #   run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/outkit/index.json" -UserName ${{ secrets.OUTKIT_NUGET_USERNAME }} -Password ${{ secrets.OUTKIT_NUGET_PASSWORD }}
   
     # Build
     - name: Run build
