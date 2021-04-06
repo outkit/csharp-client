@@ -15,22 +15,16 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}        
       
-    # Add Deps from our Nuget Server
-    # - name: Register GPR
-    #   run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/outkit/index.json" -UserName ${{ secrets.OUTKIT_NUGET_USERNAME }} -Password ${{ secrets.OUTKIT_NUGET_PASSWORD }}
-  
     # Build
     - name: Run build
-      run: dotnet build ./Outkit/Outkit.csproj --configuration Release
-
-    # Test
-    #- name: Run Tests
-    #  run: dotnet test ./Hma.Utils.Tests/calc2tests/hma.utils.calc2.tests.csproj --configuration Release
-    #- name: Run Tests
-    #  run: dotnet test ./Hma.Utils.Tests/Hma.Utils.Test/Hma.Utils.Test.csproj --configuration Release
+      # run: dotnet build ./Outkit/Outkit.csproj --configuration Release
+      run: |  
+        cd ./Outkit
+        dotnet pack -c Release -o out  
 
     - name: push package
       # run: nuget push *\bin\Release\*.nupkg -Source "GPR"
-      run: dotnet nuget push *\bin\Release\*.nupkg -k ${GITHUB_TOKEN} 
+      # run: dotnet nuget push *\bin\Release\*.nupkg -k ${GITHUB_TOKEN} 
+      run: dotnet nuget push ./Outkit/out/*.nupkg -k ${GITHUB_TOKEN} --skip-duplicate --no-symbols
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
