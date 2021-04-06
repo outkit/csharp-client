@@ -37,4 +37,6 @@ jobs:
 
     - name: push package
       # run: nuget push *\bin\Release\*.nupkg -Source "GPR"
-      run: nuget push *\bin\Release\*.nupkg
+      run: nuget push *\bin\Release\*.nupkg -k ${GITHUB_TOKEN} 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
