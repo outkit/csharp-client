@@ -18,8 +18,7 @@ jobs:
     # Build
     - name: Run build
       # run: dotnet build ./Outkit/Outkit.csproj --configuration Release
-      run: |  
-        dotnet pack -c Release -o out  
+      run: dotnet pack ./Outkit/Outkit.csproj -c Release -o out  
 
     - name: push package
       # run: nuget push *\bin\Release\*.nupkg -Source "GPR"
