@@ -17,12 +17,12 @@ jobs:
       
     # Build
     - name: Run build
-      # run: dotnet build ./Outkit/Outkit.csproj --configuration Release
-      run: dotnet pack ./Outkit/Outkit.csproj -c Release -o out  
+      run: dotnet build ./Outkit/Outkit.csproj --configuration Release
+      # run: dotnet pack ./Outkit/Outkit.csproj -c Release -o out  
 
     - name: push package
       # run: nuget push *\bin\Release\*.nupkg -Source "GPR"
       # run: dotnet nuget push *\bin\Release\*.nupkg -k ${GITHUB_TOKEN} 
-      run: dotnet nuget push ./out/*.nupkg -k ${GITHUB_TOKEN} --skip-duplicate --no-symbols
+      run: dotnet nuget push */bin/Release/*.nupkg -k ${GITHUB_TOKEN} --skip-duplicate --no-symbols
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
