@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/hmasw/outkit-csharp-client</RepositoryUrl>
+    <RepositoryUrl>https://github.com/outkit/csharp-client</RepositoryUrl>
     <PackageId>OutkitCSharpClient</PackageId>
     <Version>1.0.6</Version>    
   </PropertyGroup>
