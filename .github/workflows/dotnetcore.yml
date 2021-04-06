@@ -36,4 +36,5 @@ jobs:
     #  run: dotnet test ./Hma.Utils.Tests/Hma.Utils.Test/Hma.Utils.Test.csproj --configuration Release
 
     - name: push package
-      run: nuget push *\bin\Release\*.nupkg -Source "GPR"
+      # run: nuget push *\bin\Release\*.nupkg -Source "GPR"
+      run: nuget push *\bin\Release\*.nupkg
