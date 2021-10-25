@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Outkit
 {
@@ -18,6 +19,7 @@ namespace Outkit
         public string From { get; set; }
         public string TextTemplateBody { get; set; }
         public bool Test { get; set; }
+        [JsonIgnore()]
         public JsonElement Data { get; set; }
         public string Template { get; set; }
         public string TemplateId { get; set; }
@@ -40,44 +42,44 @@ namespace Outkit
         public string Project { get; set; }
         public JsonElement BackendResponse { get; set; }
 
-        public OutkitResponse(JsonElement elem)
+        public OutkitResponse(JsonElement data)
         {
-            HtmlTemplateBody = GetStringValue("html_template_body", elem);
-            Id = GetStringValue("id", elem);
-            To = GetStringValue("to", elem);
-            Backend = GetStringValue("backend", elem);
-            IdFromSubmitter = GetStringValue("id_from_submitter", elem);
-            BackendId = GetStringValue("backend_id", elem);
-            Subject = GetStringValue("subject", elem);
-            FailedAt = GetDateTime("failed_at", elem);
-            TemplateStyles = GetStringValue("template_styles", elem);
-            From = GetStringValue("from", elem);
-            TextTemplateBody = GetStringValue("template_body", elem);
-            Test = GetBooleanValue("test", elem);
-            Data = GetElement("data", elem);
-            Template = GetStringValue("template", elem);
-            TemplateId = GetStringValue("template_id", elem);
-            RenderOnly = GetBooleanValue("render_only", elem);
-            HtmlBody = GetStringValue("html_body", elem);
-            IdFromBackend = GetStringValue("id_from_backend", elem);
-            StatusMessage = GetStringValue("status_message", elem);
-            TextBody = GetStringValue("text_body", elem);
-            PublicId = GetStringValue("public_id", elem);
-            QueuedForDeliveryAt = GetDateTime("queued_for_delivery_at", elem);
-            Sync = GetBooleanValue("sync", elem);
-            ProjectId = GetStringValue("project_id", elem);
-            RenderedAt = GetDateTime("rendered_at", elem);
-            ReceivedAt = GetDateTime("received_at", elem);
-            DeliveredAt = GetDateTime("delivered_at", elem);
-            Done = GetBooleanValue("done", elem);
-            ProviderId = GetStringValue("provider_id", elem);
-            Status = GetStatus(elem);
-            QueuedForRenderingAt = GetDateTime("queued_for_rendering_at", elem);
-            Project = GetStringValue("project", elem);
-            BackendResponse = GetElement("backend_response", elem);
+                HtmlTemplateBody = GetStringValue("html_template_body", data);
+                Id = GetStringValue("id", data);
+                To = GetStringValue("to", data);
+                Backend = GetStringValue("backend", data);
+                IdFromSubmitter = GetStringValue("id_from_submitter", data);
+                BackendId = GetStringValue("backend_id", data);
+                Subject = GetStringValue("subject", data);
+                FailedAt = GetDateTime("failed_at", data);
+                TemplateStyles = GetStringValue("template_styles", data);
+                From = GetStringValue("from", data);
+                TextTemplateBody = GetStringValue("template_body", data);
+                Test = GetBooleanValue("test", data);
+                Data = GetElement("data", data);
+                Template = GetStringValue("template", data);
+                TemplateId = GetStringValue("template_id", data);
+                RenderOnly = GetBooleanValue("render_only", data);
+                HtmlBody = GetStringValue("html_body", data);
+                IdFromBackend = GetStringValue("id_from_backend", data);
+                StatusMessage = GetStringValue("status_message", data);
+                TextBody = GetStringValue("text_body", data);
+                PublicId = GetStringValue("public_id", data);
+                QueuedForDeliveryAt = GetDateTime("queued_for_delivery_at", data);
+                Sync = GetBooleanValue("sync", data);
+                ProjectId = GetStringValue("project_id", data);
+                RenderedAt = GetDateTime("rendered_at", data);
+                ReceivedAt = GetDateTime("received_at", data);
+                DeliveredAt = GetDateTime("delivered_at", data);
+                Done = GetBooleanValue("done", data);
+                ProviderId = GetStringValue("provider_id", data);
+                Status = GetStatus(data);
+                QueuedForRenderingAt = GetDateTime("queued_for_rendering_at", data);
+                Project = GetStringValue("project", data);
+                BackendResponse = GetElement("backend_response", data);
 
-            if (elem.TryGetProperty("type", out var t))
-                Type = t.GetString() == "sms" ? MessageType.sms : MessageType.email;
+                if (data.TryGetProperty("type", out var t))
+                    Type = t.GetString() == "sms" ? MessageType.sms : MessageType.email;
         }
         private static OutkitStatus GetStatus(JsonElement elem)
         {
