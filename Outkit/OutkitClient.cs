@@ -9,23 +9,21 @@ using System.Text.Json;
 
 namespace Outkit
 {
-    public class Client
+    public class OutkitClient
     {
         public string Key { get; set; }
         public string Secret { get; set; }
         public string Passphrase { get; set; }
         public string BaseUri { get; set; } = "https://api.outkit.io/v1";
-        private readonly HttpClient _client;
+        private readonly HttpClient _client = new();
         private readonly string _boundary = $"----------{Guid.NewGuid():N}";
 
-        public Client(string key, string passPhrase, string secret = "", string uri = "")
+        public OutkitClient(string key, string passPhrase, string secret = "", string uri = "")
         {
             Key = key;
             Passphrase = passPhrase;
             Secret = secret;
             BaseUri = string.IsNullOrEmpty(uri) ? BaseUri : uri;
-
-            _client = new HttpClient();
 
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -55,21 +53,20 @@ namespace Outkit
 
         public OutkitResponse CreateMessage(Message message)
         {
-            var json = message.ToJson();
+            var json = JsonSerializer.Serialize(message);
             json = "{\"message\":" + json + "}";
             var uri = BaseUri + "/messages";
-            var sigData = GetSignatureData("POST", uri, json);
-            JsonDocument elem;
+            var signatureData = GetSignatureData("POST", uri, json);
+            JsonDocument doc;
             if (message.HasAttachments)
             {
                 var form = message.ToFormData(_boundary);
-                 elem = Post(uri, form, sigData);
+                doc = Post(uri, form, signatureData);
             }
             else
-            {
-                elem = Post(uri, json, sigData);
-            }
-            return new OutkitResponse(elem.RootElement);
+                doc = Post(uri, json, signatureData);
+            var elem = doc.RootElement.GetProperty("data");            
+            return new OutkitResponse(elem);
         }
         
         private Dictionary<string,string> GetSignatureData(string method, string uri, string body = "")
@@ -114,11 +111,11 @@ namespace Outkit
             throw new Exception($"{response.StatusCode},{error}");
         }
 
-        private JsonDocument Post(string url, string body, IReadOnlyDictionary<string, string> sig)
+        private JsonDocument Post(string url, string body, IReadOnlyDictionary<string, string> signatureData)
         {
             var msg = new HttpRequestMessage(HttpMethod.Post, url);
 
-            AddHeaders(msg, sig);
+            AddHeaders(msg, signatureData);
             msg.Content = new StringContent(body, Encoding.UTF8, "Application/Json");
 
             var response = _client.SendAsync(msg).Result;
@@ -133,12 +130,12 @@ namespace Outkit
 
         }
 
-        private JsonDocument Post(string url, HttpContent body, IReadOnlyDictionary<string, string> sig)
+        private JsonDocument Post(string url, HttpContent body, IReadOnlyDictionary<string, string> signatureData)
         {
-            body.Headers.Add("Outkit-Access-Key", sig["key"]);
-            body.Headers.Add("Outkit-Access-Signature", sig["signature"]);
-            body.Headers.Add("Outkit-Access-Timestamp", sig["timestamp"]);
-            body.Headers.Add("Outkit-Access-Passphrase", sig["passphrase"]);
+            body.Headers.Add("Outkit-Access-Key", signatureData["key"]);
+            body.Headers.Add("Outkit-Access-Signature", signatureData["signature"]);
+            body.Headers.Add("Outkit-Access-Timestamp", signatureData["timestamp"]);
+            body.Headers.Add("Outkit-Access-Passphrase", signatureData["passphrase"]);
 
             var response = _client.PostAsync(url, body).Result; 
             if (response.IsSuccessStatusCode)
@@ -151,12 +148,12 @@ namespace Outkit
             throw new Exception($"{response.StatusCode},{error}");
         }
 
-        private static void AddHeaders(HttpRequestMessage msg, IReadOnlyDictionary<string, string> sig)
+        private static void AddHeaders(HttpRequestMessage msg, IReadOnlyDictionary<string, string> signatureData)
         {
-            msg.Headers.Add("Outkit-Access-Key", sig["key"]);
-            msg.Headers.Add("Outkit-Access-Signature", sig["signature"]);
-            msg.Headers.Add("Outkit-Access-Timestamp", sig["timestamp"]);
-            msg.Headers.Add("Outkit-Access-Passphrase", sig["passphrase"]);
+            msg.Headers.Add("Outkit-Access-Key", signatureData["key"]);
+            msg.Headers.Add("Outkit-Access-Signature", signatureData["signature"]);
+            msg.Headers.Add("Outkit-Access-Timestamp", signatureData["timestamp"]);
+            msg.Headers.Add("Outkit-Access-Passphrase", signatureData["passphrase"]);
         }
     }
 }

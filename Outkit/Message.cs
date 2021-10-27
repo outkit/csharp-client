@@ -43,6 +43,8 @@ namespace Outkit
         public string HtmlBody { get; set; }
         [JsonPropertyName("from")]
         public string From { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [JsonPropertyName("data")]
         public JsonElement Data { get; set; }
         [JsonPropertyName("backend_id")]
@@ -51,65 +53,6 @@ namespace Outkit
         public string Backend { get; set; }
         [JsonIgnore]
         public MessageDisposition Disposition { get; set; }
-
-        public string ToJson()
-        {
-            // as there seems to be no way to remove null properties,  translate by hand.
-            var res = "{";
-            var t = Type == MessageType.email ? "email" : "sms";
-            res += $"\"type\":\"{t}\",";
-            if (!string.IsNullOrEmpty(To))
-                res += $"\"to\":\"{To}\",";
-            if (!string.IsNullOrEmpty(TextTemplateBody))
-                res += $"\"text_template_body\":\"{TextTemplateBody}\",";
-            if (!string.IsNullOrEmpty(TextBody))
-                res += $"\"text_body\":\"{TextBody}\",";
-            
-            t = Test ? "true" : "false";
-            res += $"\"test\":{t},";
-            if (!string.IsNullOrEmpty(TemplateStyles))
-                res += $"\"template_styles\":\"{TemplateStyles}\",";
-
-            if (!string.IsNullOrEmpty(TemplateId))
-                res += $"\"template_id\":\"{TemplateId}\",";
-
-            if (!string.IsNullOrEmpty(Template))
-                res += $"\"template\":\"{Template}\",";
-            t = Sync ? "true" : "false";
-            res += $"\"sync\":{t},";
-            if (!string.IsNullOrEmpty(Subject))
-                res += $"\"subject\":\"{Subject}\",";
-            t = RenderOnly ? "true" : "false";
-            res += $"\"render_only\":{t},";
-            if (!string.IsNullOrEmpty(ProjectId))
-                res += $"\"project_id\":\"{ProjectId}\",";
-
-            if (!string.IsNullOrEmpty(Project))
-                res += $"\"project\":\"{Project}\",";
-
-            if (!string.IsNullOrEmpty(IdFromSubmitter))
-                res += $"\"id_from_submitter\":\"{IdFromSubmitter}\",";
-            if (!string.IsNullOrEmpty(HtmlTemplateBody))
-                res += $"\"html_template_body\":\"{HtmlTemplateBody}\",";
-            if (!string.IsNullOrEmpty(HtmlBody))
-                res += $"\"html_body\":\"{HtmlBody}\",";
-            if (!string.IsNullOrEmpty(From))
-                res += $"\"from\":\"{From}\",";
-            if (!string.IsNullOrEmpty(BackendId))
-                res += $"\"backend_id\":\"{BackendId}\",";
-            if (!string.IsNullOrEmpty(Backend))
-                res += $"\"backend_id\":\"{Backend}\",";
-            if (Data.ValueKind != JsonValueKind.Null)
-            {
-                res += Data + ",";
-            }
-
-            // delete trailing ,
-            res = res.TrimEnd(',');
-            res += "}";
-            return res;
-        }
-
         private List<EmailAttachment> Attachments { get; } = new List<EmailAttachment>();
 
         public void AddAttachment(string fileName)
@@ -134,7 +77,8 @@ namespace Outkit
             form.Headers.Remove("Content-Type");
             form.Headers.Add("Content-Type", "multipart/form-data;boundary=" + boundary);
 
-            var s = ToJson();
+            var s = JsonSerializer.Serialize(this);
+
             var stringContent = new StringContent(s);
             stringContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
@@ -158,14 +102,11 @@ namespace Outkit
                     FileName = Path.GetFileName(attachment.Filename)
                 };
                 ba.Headers.ContentType = new MediaTypeHeaderValue(attachment.MimeType);
-                form.Add(ba, "attachments[]", Path.GetFileName(attachment.Filename));
+                form.Add(ba, "attachments[]", Path.GetFileName(attachment.Filename) ?? string.Empty);
             }
 
-
-            //  form.ReadAsStringAsync().Result;
             return form;
         }
         internal bool HasAttachments => Attachments.Count > 0;
     }
-
 }

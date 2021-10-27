@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Outkit", "Outkit\Outkit.csproj", "{74F7AA0D-151F-4171-AA86-559E4A1C8150}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOutkitClient", "TestOutkitClient\TestOutkitClient.csproj", "{440924F1-7622-4155-AA18-5205FACF1E15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOutkit", "TestOutkit\TestOutkit.csproj", "{679007A6-2C67-490C-93A8-EFD1549FCC44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{74F7AA0D-151F-4171-AA86-559E4A1C8150}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74F7AA0D-151F-4171-AA86-559E4A1C8150}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74F7AA0D-151F-4171-AA86-559E4A1C8150}.Release|Any CPU.Build.0 = Release|Any CPU
-		{440924F1-7622-4155-AA18-5205FACF1E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{440924F1-7622-4155-AA18-5205FACF1E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{440924F1-7622-4155-AA18-5205FACF1E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{440924F1-7622-4155-AA18-5205FACF1E15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{679007A6-2C67-490C-93A8-EFD1549FCC44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{679007A6-2C67-490C-93A8-EFD1549FCC44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{679007A6-2C67-490C-93A8-EFD1549FCC44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{679007A6-2C67-490C-93A8-EFD1549FCC44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
