@@ -3,7 +3,7 @@ This is the official [C#](https://docs.microsoft.com/en-us/dotnet/csharp/program
 the [Outkit](https://outkit.io/) [API](https://docs.outkit.io/). 
 
 ## Contributors
-The initial version of this client was created by [Keith Giddings](https://github.com/krgiddings).
+The initial version of this client was created by [Keith Giddings](https://github.com/krgiddings). In later versions, [Tor Erik Dahlsrud](https://github.com/dahlsrud) made significant contributions.
 
 ## Questions? Comments?
 Feel free to [create a GitHub issue](https://github.com/outkit/csharp-client/issues) with any questions or 
